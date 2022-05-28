@@ -4,7 +4,7 @@ from crypto.models import Crypto, PriceRecord
 class Analisis(models.Model):
     ners       = models.TextField()
     fre        = models.TextField()
-    sentiment  = models.IntegerField(default=0)
+    sentiment  = models.FloatField(default=0)
 
 # Create your models here.
 class Opinion(models.Model):

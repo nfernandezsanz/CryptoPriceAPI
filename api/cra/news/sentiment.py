@@ -1,8 +1,6 @@
 
 import re
 import spacy
-import requests
-from bs4                  import BeautifulSoup
 from collections          import Counter
 from nltk.tokenize        import word_tokenize
 from nltk.corpus          import stopwords
@@ -30,18 +28,7 @@ def token_count(tokens, N=10):
         rta[word[0]] = word[1]
     return rta
 
-def post_content(link):
-
-    headers  = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-    res      = requests.get(link, headers=headers)
-    soup     = BeautifulSoup(res.content, "html.parser")
-    content  = soup.get_text()
-    content  = re.sub('https:\/\/\S+', '', content)
-    content  = re.sub("\n","",content)
-    content  = re.sub("\t","",content)
-    return content.lower()
-
-def analize_sentiment(content, debug = False):
+def analize_sentiment(content):
     sentiment = analyzer.polarity_scores(content)
     return sentiment['compound']
 
@@ -66,15 +53,14 @@ def NERs(content):
         rta[label] = set(rta[label])
     return rta
 
-def analize(posteo, debug = False):
+def analize(posteo, crypto, debug = False):
     
     op        = Opinion()
-    op.crypto = posteo['crypto']
+    op.crypto = crypto
     op.source = posteo['source']
-    op.link   = posteo['link']
+    op.link   = posteo['url']
+    content   = posteo['content']
 
-    content = post_content(posteo['link'])
-    
     # Sentimiento
     sentiment = analize_sentiment(content)
     ## Analitico
@@ -106,9 +92,10 @@ def analize(posteo, debug = False):
     an.ners      = str(ners)
     an.fre       = str(top10)
     an.sentiment = sentiment
+    
     an.save()
     
     op.analisis = an
     op.save()
 
-    return op
+    return sentiment

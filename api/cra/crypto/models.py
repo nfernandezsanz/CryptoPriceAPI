@@ -29,4 +29,5 @@ class PriceRecord(models.Model):
 class Sentiment(models.Model):
     crypto     = models.ForeignKey(Crypto, on_delete=models.CASCADE, default=None)
     timestamp  = models.DateTimeField(auto_now_add=True)
-    felling    = models.FloatField(default=0.0)
+    sentiment  = models.FloatField(default=0.0)
+    price      = models.ForeignKey(PriceRecord, on_delete=models.CASCADE, default=None)

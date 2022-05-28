@@ -98,8 +98,17 @@ class SentimentViewSet(viewsets.ModelViewSet):
         # Me traigo las noticias
         news = get_news(crypto)
 
+        sum  = 0
+
         for new in news:
-            rta = analize(new)
-            print(rta)
+            rta = analize(new, crypto)
+            sum += rta
+
+        rta = Sentiment()
+        rta.crypto    = crypto
+        rta.sentiment = sum
+        rta.price     = #Falta esto
+
+        rta.save()
 
         return Response("Funny")
