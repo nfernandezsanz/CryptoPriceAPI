@@ -1,0 +1,12 @@
+Django==3.2.11
+django-rest-swagger==2.2.0
+djangorestframework==3.13.1
+django-cors-headers
+mysqlclient
+gunicorn
+GoogleNews
+pycoingecko
+beautifulsoup4
+newsapi-python
+nltk
+spacy
