@@ -8,7 +8,8 @@ from rest_framework             import viewsets, status, permissions
 from datetime                   import datetime, timedelta
 from django.utils               import timezone        
 from django.utils.timezone      import make_aware
-
+from news.google                import get_news
+from news.sentiment             import analize
 
 
 class CryptoViewSet(viewsets.ModelViewSet):
@@ -91,9 +92,14 @@ class SentimentViewSet(viewsets.ModelViewSet):
             return Response({"msg": "Crypto not suported", "error_code": "400"}, 
                              status=status.HTTP_400_BAD_REQUEST)  
 
-        #Me traigo el precio.. y de paso lo guardo
+        # Me traigo el precio.. y de paso lo guardo
         price = crypto.price_now
         
-        #
+        # Me traigo las noticias
+        news = get_news(crypto)
+
+        for new in news:
+            rta = analize(new)
+            print(rta)
 
         return Response("Funny")

@@ -8,7 +8,7 @@ from nltk.tokenize        import word_tokenize
 from nltk.corpus          import stopwords
 from nltk.stem            import WordNetLemmatizer
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-# from .models              import Opinion,Analisis
+from .models              import Opinion,Analisis
 
 analyzer = SentimentIntensityAnalyzer()
 
@@ -68,10 +68,10 @@ def NERs(content):
 
 def analize(posteo, debug = False):
     
-    # op        = Opinion()
-    # op.crypto = posteo['crypto']
-    # op.source = posteo['source']
-    # op.link   = posteo['link']
+    op        = Opinion()
+    op.crypto = posteo['crypto']
+    op.source = posteo['source']
+    op.link   = posteo['link']
 
     content = post_content(posteo['link'])
     
@@ -102,17 +102,13 @@ def analize(posteo, debug = False):
         print(ners)
         print()
 
-    # an = Analisis()
-    # an.ners      = str(ners)
-    # an.fre       = str(top10)
-    # an.sentiment = sentiment
-    # an.save()
+    an = Analisis()
+    an.ners      = str(ners)
+    an.fre       = str(top10)
+    an.sentiment = sentiment
+    an.save()
     
-    # op.analisis = an
-    # op.save()
+    op.analisis = an
+    op.save()
 
-    return {"sentiment":sentiment, "top10":top10, "ners":ners}
-
-print("Iniciando..")
-    
-analize({"link":"https://cointelegraph.com/news/crypto-biz-smart-money-is-betting-big-on-web3-layer-2-may-19-25"}, debug= True)
+    return op
