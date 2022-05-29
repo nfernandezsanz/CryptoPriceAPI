@@ -92,23 +92,35 @@ class SentimentViewSet(viewsets.ModelViewSet):
             return Response({"msg": "Crypto not suported", "error_code": "400"}, 
                              status=status.HTTP_400_BAD_REQUEST)  
 
-        # Me traigo el precio.. y de paso lo guardo
+        # Me traigo el precio..
         price = crypto.price_now
+
+        pr    = PriceRecord()
+        pr.crypto = crypto
+        pr.price  = price
+        pr.save() 
         
         # Me traigo las noticias
         news = get_news(crypto)
 
         sum  = 0
-
+        cant = 0
         for new in news:
             rta = analize(new, crypto)
             sum += rta
+            if(rta != 0):
+                cant += 1
+        
+        sum = sum / cant
 
         rta = Sentiment()
+        
         rta.crypto    = crypto
         rta.sentiment = sum
-        rta.price     = #Falta esto
+
+
+        rta.price     = pr
 
         rta.save()
 
-        return Response("Funny")
+        return Response(SentimentSerializer(rta).data)

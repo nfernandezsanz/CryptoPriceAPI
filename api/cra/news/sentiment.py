@@ -53,11 +53,13 @@ def NERs(content):
         rta[label] = set(rta[label])
     return rta
 
-def analize(posteo, crypto, debug = False):
+def analize(posteo, crypto, debug = True):
     
     op        = Opinion()
     op.crypto = crypto
-    op.source = posteo['source']
+
+    op.source = posteo['source']['name']
+
     op.link   = posteo['url']
     content   = posteo['content']
 

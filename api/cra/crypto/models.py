@@ -10,10 +10,6 @@ class Crypto(models.Model):
     @property
     def price_now(self):
         price = get_price(self.name, self.symbol)
-        pr    = PriceRecord()
-        pr.crypto = self
-        pr.price  = price
-        pr.save() 
         return price
 
     def __str__(self):

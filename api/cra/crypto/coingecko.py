@@ -8,6 +8,8 @@ def get_price(name , symbol):
         name  = name.lower()
         rta   = cg.get_price(ids=name, vs_currencies='usd')
         price = rta[name]['usd']
+
+        print(name, "-->" , price , "USD")
     except:
         pass
 
