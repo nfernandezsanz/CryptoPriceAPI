@@ -4,7 +4,7 @@ from rest_framework             import viewsets, status, permissions
 from rest_framework.response    import Response
 from rest_framework.decorators  import action
 from rest_framework             import viewsets, status, permissions
-
+from .coingecko                 import get_cryptos, get_price
 from datetime                   import datetime, timedelta
 from django.utils               import timezone        
 from django.utils.timezone      import make_aware
@@ -16,6 +16,23 @@ class CryptoViewSet(viewsets.ModelViewSet):
     serializer_class   = CryptoSerializer
     queryset           = Crypto.objects.all()
 
+    @action(detail=False, methods=['get', 'post'])
+    def download(self,request,pk=None):
+        list    = get_cryptos()
+        cryptos = Crypto.objects.all().values_list('name', flat=True)
+        print(cryptos)
+        for c in list:
+            #Protejo que no se repitan los datos
+            if(c['name'] not in cryptos):
+                try:
+                    n = Crypto()
+                    n.name   = c['name']
+                    n.symbol = c['symbol'] 
+                    n.save()
+                except:
+                    pass
+
+        return Response(CryptoSerializer(Crypto.objects.all(), many=True).data)
 
 class PriceRecordViewSet(viewsets.ModelViewSet):
     serializer_class   = PriceRecordSerializer
@@ -92,35 +109,55 @@ class SentimentViewSet(viewsets.ModelViewSet):
             return Response({"msg": "Crypto not suported", "error_code": "400"}, 
                              status=status.HTTP_400_BAD_REQUEST)  
 
+        try:
+            #Chequeo si no tengo una consulta de hace menos de 30 min
+            last_sentiment = Sentiment.objects.filter(crypto=crypto).order_by('timestamp').last()
+
+            if((timezone.now() - last_sentiment.timestamp) < timedelta(minutes=5)):
+                print("Le devuelvo la misma data..")
+                return Response(SentimentSerializer(last_sentiment).data)
+        except:
+            pass
+
+
+        # Me traigo las noticias
+        news = get_news(crypto)
+
+        if(len(news) < 3):
+            return Response({"msg": "No se encontraron articulos suficientes de la crypto solicitada", "error_code": "422"}, 
+                             status=status.HTTP_422_UNPROCESSABLE_ENTITY)  
+
         # Me traigo el precio..
         price = crypto.price_now
 
+        # Creo el contenedor final
+        sentiment = Sentiment()
+        sentiment.crypto = crypto
+        
+        # Registro el precio actual
         pr    = PriceRecord()
         pr.crypto = crypto
         pr.price  = price
         pr.save() 
-        
-        # Me traigo las noticias
-        news = get_news(crypto)
+
+        sentiment.price = pr
+
+        sentiment.save()
 
         sum  = 0
         cant = 0
         for new in news:
-            rta = analize(new, crypto)
+            print("\n---------------------------------------------")
+            print("\t",new['url'])
+            rta = analize(new, crypto, sentiment)
+            print("\tResult:", rta)
             sum += rta
             if(rta != 0):
                 cant += 1
         
         sum = sum / cant
 
-        rta = Sentiment()
-        
-        rta.crypto    = crypto
-        rta.sentiment = sum
+        sentiment.sentiment = sum
+        sentiment.save()
 
-
-        rta.price     = pr
-
-        rta.save()
-
-        return Response(SentimentSerializer(rta).data)
+        return Response(SentimentSerializer(sentiment).data)

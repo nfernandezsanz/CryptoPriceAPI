@@ -6,7 +6,7 @@ app_name = "Crypto"
 
 router = routers.DefaultRouter(trailing_slash=False)
 
-router.register('cypto'     , viewsets.CryptoViewSet)
+router.register('crypto'     , viewsets.CryptoViewSet)
 
 router.register('price'     , viewsets.PriceRecordViewSet)
 

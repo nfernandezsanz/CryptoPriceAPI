@@ -1,40 +1,16 @@
 
 import re
 import os
-import spacy
 import requests
 import pyshorteners
-from GoogleNews import GoogleNews
 from newsapi    import NewsApiClient
 from bs4        import BeautifulSoup
 from datetime   import datetime, timedelta
+from newspaper  import Article
+from newspaper  import Config
 
 api_key   = os.getenv('NEWS_API')
 type_tiny = pyshorteners.Shortener()
-#googlenews = GoogleNews(start='02/01/2020',end='02/28/2020')
-
-def get_news_google(crypto, max = 10):
-
-    googlenews = GoogleNews()
-    googlenews = GoogleNews(lang='en', region='US')
-    googlenews = GoogleNews(period='1d')
-
-    googlenews.set_encode('utf-8')
-
-    googlenews.get_news(crypto)
-
-    articles = googlenews.results()[:max]
-
-
-    post_list = []
-    for article in articles:
-        short_url = type_tiny.tinyurl.short("http://"+ article['link'])
-        post = {"crypto":crypto,"title":article['title'], "source":article['site'], "link":short_url}
-        post_list.append(post)
-
-    googlenews.clear()
-    return post_list
-
 
 def get_news(crypto, max = 10):
 
@@ -49,6 +25,38 @@ def get_news(crypto, max = 10):
         from_param=d_from,
     )
 
-    articulos = headlines['articles'][:max]
+    articulos_ = headlines['articles']
+
+    articulos  = list()
+
+    for articulo in articulos_:
+        if( crypto.name.lower() in articulo['title'].lower()):
+            articulos.append(articulo)
+        if( len(articulos) >= max):
+            break
+
+    if(len(articulos) <= 0):
+        print("Problemon... no encontre articulos...")
+        articulos = articulos_[:max]
+
+    # Extraigo todo el texto...
+    for articulo in articulos:
+        article = Article(articulo['url'])
+
+        user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+        config = Config()
+        config.browser_user_agent = user_agent
+
+        try:
+            article.download()
+            article.parse()
+            content = article.text
+
+            content = content.lower()
+            content = re.sub(r"[^a-zA-Z0-9]+", ' ', content)
+
+            articulo['contnet'] = content
+        except:
+            pass
 
     return articulos

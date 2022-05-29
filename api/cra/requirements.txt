@@ -11,3 +11,4 @@ newsapi-python
 nltk
 spacy
 pyshorteners
+newspaper3k

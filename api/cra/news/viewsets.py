@@ -1,5 +1,5 @@
-from .models                    import Opinion, Analisis
-from .serializer                import OpinionSerializer, AnalisisSerializer
+from crypto.models              import Opinion, Analisis, Source
+from .serializer                import OpinionSerializer, AnalisisSerializer, SourceSerializer
 from rest_framework             import viewsets, status, permissions
 from rest_framework.response    import Response
 from rest_framework.decorators  import action
@@ -16,3 +16,8 @@ class NewsViewSet(viewsets.ModelViewSet):
 class AnalisisViewSet(viewsets.ModelViewSet):
     serializer_class   = AnalisisSerializer
     queryset           = Analisis.objects.all()
+
+
+class SourceViewSet(viewsets.ModelViewSet):
+    serializer_class   = SourceSerializer
+    queryset           = Source.objects.all()

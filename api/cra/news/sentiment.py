@@ -6,7 +6,7 @@ from nltk.tokenize        import word_tokenize
 from nltk.corpus          import stopwords
 from nltk.stem            import WordNetLemmatizer
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from .models              import Opinion,Analisis
+from crypto.models        import Opinion,Analisis, Source
 
 analyzer = SentimentIntensityAnalyzer()
 
@@ -53,15 +53,21 @@ def NERs(content):
         rta[label] = set(rta[label])
     return rta
 
-def analize(posteo, crypto, debug = True):
+def analize(posteo, crypto, sentiment , debug = False):
     
-    op        = Opinion()
-    op.crypto = crypto
+    op           = Opinion()
+    op.crypto    = crypto
 
-    op.source = posteo['source']['name']
+    source       = Source.objects.filter(name = posteo['source']['name']).last()
+    if(not source):
+        source      = Source()
+        source.name = posteo['source']['name']
+        source.save()
 
-    op.link   = posteo['url']
-    content   = posteo['content']
+    op.source    = source
+    op.link      = posteo['url']
+    op.sentiment = sentiment
+    content      = posteo['content']
 
     # Sentimiento
     sentiment = analize_sentiment(content)

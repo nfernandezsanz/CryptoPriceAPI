@@ -16,3 +16,8 @@ def get_price(name , symbol):
     return price
 
 
+def get_cryptos():
+    cg    = CoinGeckoAPI()
+    c_list = cg.get_coins_list()
+    return c_list
+
