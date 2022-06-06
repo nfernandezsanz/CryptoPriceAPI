@@ -16,7 +16,9 @@ services:
       MYSQL_DATABASE: dev
 
   api_web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     tty: true
     #restart: always
     command: python manage.py runserver 0.0.0.0:8000
@@ -28,3 +30,11 @@ services:
       - ./envs/db.env
     depends_on:
       - db
+      
+  crons:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.cron
+    env_file:
+      - ./envs/db.env
+    command:  sh -c ./cron/start_cron_shit.sh
