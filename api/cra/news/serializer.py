@@ -62,7 +62,8 @@ class AnalisisSerializer(serializers.ModelSerializer):
             representation['sentiment']= "POSITIVE"
         else:
             representation['sentiment']= "NEGATIVE"
-
-        representation['article']      = Opinion.objects.filter(analisis=instance).last().link
-
+        try:
+            representation['article']      = Opinion.objects.filter(analisis=instance).last().link
+        except:
+            representation['article']      = "Link not found"
         return representation

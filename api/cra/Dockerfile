@@ -11,7 +11,7 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 RUN python3 -m nltk.downloader punkt
 RUN python3 -m nltk.downloader wordnet 
 RUN python3 -m nltk.downloader vader_lexicon
-RUN python3 -m nltk.downloader omw-1.4 
+RUN python3 -m nltk.downloader omw
 RUN python3 -m nltk.downloader stopwords
 RUN python3 -m spacy download en
 COPY . /code/

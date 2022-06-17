@@ -1,0 +1,8 @@
+http://localhost:8000/sentiment/now
+
+http://localhost:8000/sentiment/historic
+
+http://localhost:8000/nlp/
+http://localhost:8000/nlp/news
+
+http://localhost:8000/nlp/source

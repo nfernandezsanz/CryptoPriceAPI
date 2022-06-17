@@ -12,3 +12,5 @@ nltk
 spacy
 pyshorteners
 newspaper3k
+
+fear-and-greed

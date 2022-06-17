@@ -52,6 +52,6 @@ class Opinion(models.Model):
     crypto     = models.ForeignKey(Crypto, on_delete=models.CASCADE, default=None)
     timestamp  = models.DateTimeField(auto_now_add=True)
     source     = models.ForeignKey(Source, on_delete=models.CASCADE)
-    link       = models.URLField()
+    link       = models.TextField()
     analisis   = models.ForeignKey(Analisis, on_delete=models.CASCADE)
     sentiment  = models.ForeignKey(Sentiment, on_delete=models.CASCADE, default=None)
