@@ -41,6 +41,7 @@ def get_news(crypto, max = 10):
 
     # Extraigo todo el texto...
     for articulo in articulos:
+        
         article = Article(articulo['url'])
 
         user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
