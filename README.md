@@ -65,7 +65,7 @@ The following tools were used in this project:
 
 ## :white_check_mark: Requirements ##
 
-Before starting :checkered_flag:, you need to have [Git](https://git-scm.com), [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/engine/reference/commandline/compose/) installed.
+Before starting :checkered_flag:, you need to have [Git](https://git-scm.com), [Docker](https://www.docker.com/), [Docker Compose](https://docs.docker.com/engine/reference/commandline/compose/) and [MySQL Server](https://phoenixnap.com/kb/install-mysql-ubuntu-20-04) installed.
 
 ## :checkered_flag: Starting ##
 
@@ -74,23 +74,26 @@ Before starting :checkered_flag:, you need to have [Git](https://git-scm.com), [
 $ git clone https://github.com/nfernandezsanz/CryptoPriceAPI.git
 
 # Access
-$ cd crypto-price-api
+$ cd CryptoPriceAPI/api
 
-# Install dependencies
-$ yarn
+# Modify the Enviroment Variables
+$ nano envs/db.env
 
-# Run the project
-$ yarn start
+# Build the container (It can take a while.. It can take a while, I suggest a coffee)
+$ docker-compose build 
 
-# The server will initialize in the <http://localhost:3000>
+# Run the container
+$ docker-compose up 
+
+# The API will initialize in the <http://localhost:8000>
 ```
 
 ## :memo: License ##
 
-This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
+This is a personal project part of my personal portfolio. 
 
 
-Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" target="_blank">{{YOUR_NAME}}</a>
+Made with :heart: by <a href="https://github.com/nfernandezsanz" target="_blank">Nicolas Fernández Sanz</a>
 
 &#xa0;
 
