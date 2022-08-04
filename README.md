@@ -89,7 +89,7 @@ $ docker-compose up
 
 ## :memo: License ##
 
-This is a personal project part of my personal portfolio. 
+This is a personal project part of my portfolio. Feel free to use it for good purposes and remember that cryptocurrencies are volatile, do not invest blindly.
 
 
 &#xa0;
