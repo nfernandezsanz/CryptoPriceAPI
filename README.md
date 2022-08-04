@@ -11,9 +11,6 @@
 <p align="center">
   <img alt="Github top language" src="https://img.shields.io/github/languages/top/nfernandezsanz/CryptoPriceAPI?color=56BEB8">
 
-  <img alt="Github language count" src="https://img.shields.io/github/languages/count/nfernandezsanz/CryptoPriceAPI?color=56BEB8">
-
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/nfernandezsanz/CryptoPriceAPI?color=56BEB8">
 
   <!-- <img alt="Github issues" src="https://img.shields.io/github/issues/{{YOUR_GITHUB_USERNAME}}/crypto-price-api?color=56BEB8" /> -->
 
@@ -25,7 +22,9 @@
 <!-- Status -->
 
 <h4 align="center"> 
-	🚧  Crypto Price API 🚀 Is a personal project, it is not investment advice 🚧
+	🚧  Crypto Price API 🚀 Is a personal project, it is not investment advice 🚧<br><br>
+  Made by <a href="https://github.com/nfernandezsanz" target="_blank">Nicolas Fernández Sanz</a>
+
 </h4> 
 
 <hr>
@@ -44,11 +43,11 @@
 
 ## :dart: About ##
 
-REST API developed with Djando and Python designed to generate information about the current and historical sentiment of different cryptocurrencies using NLP algorithms.<br>It is a personal project, which I plan to improve over time. Any collaboration are welcome :).
+REST API developed with Djando and Python designed to collect information about the current and historical sentiment of many cryptocurrencies using NLP models.<br>It is a personal project, which I plan to improve over time. Collaborations are welcome :).
 ## :sparkles: Features ##
 :heavy_check_mark: Data for over 13,000+ cryptocurrencies such as Bitcoin, Ethereum, XRP and much more;\
 :heavy_check_mark: 500+ sources of information;\
-:heavy_check_mark: Obtaining complementary data such as polarity of the sources;\
+:heavy_check_mark: Complementary data such as polarity of the sources;\
 :heavy_check_mark: Historical data storage;\
 :heavy_check_mark: Easy deployment;\
 :heavy_check_mark: Easy access;\
@@ -92,8 +91,6 @@ $ docker-compose up
 
 This is a personal project part of my personal portfolio. 
 
-
-Made with :heart: by <a href="https://github.com/nfernandezsanz" target="_blank">Nicolas Fernández Sanz</a>
 
 &#xa0;
 
