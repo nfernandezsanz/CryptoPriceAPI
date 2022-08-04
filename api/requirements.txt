@@ -6,11 +6,9 @@ mysqlclient
 gunicorn
 GoogleNews
 pycoingecko
-beautifulsoup4
 newsapi-python
 nltk
 spacy
 pyshorteners
 newspaper3k
-
 fear-and-greed

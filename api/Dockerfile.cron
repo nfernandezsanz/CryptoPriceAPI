@@ -1,4 +1,9 @@
-FROM python:3
+FROM ubuntu:latest
+
+RUN apt update && apt install software-properties-common -y
+
+RUN add-apt-repository ppa:deadsnakes/ppa
+
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE=1
 RUN apt-get update
@@ -7,6 +12,7 @@ RUN apt-get install libssl-dev
 RUN apt-get -y install cron rsyslog
 WORKDIR /code
 COPY requirements.txt /code/
+RUN apt-get install python3-pip -y
 RUN  pip3 install --upgrade pip
 RUN  pip3 install --no-cache-dir -r requirements.txt
 
@@ -19,13 +25,11 @@ RUN python3 -m spacy download en
 
 COPY . /code/
 
-RUN sed -i '/imklog/s/^/#/' /etc/rsyslog.conf
-RUN chmod 0644 /code/cron/crontab
-RUN chmod +x  /code/cron/start_cron_shit.sh
-RUN touch /var/log/powermeter-cron.log
+RUN apt-get update && apt-get -y install cron
+COPY /cron/crontab /etc/cron.d/crontab
+RUN chmod 0644 /etc/cron.d/crontab
+RUN crontab /etc/cron.d/crontab
+RUN touch /var/log/cron.log
 
+CMD ["cron", "-f"]
 
-
-
-
-CMD ["sh", "-c", "./cron/start_cron_shit.sh ; tail -f /var/log/powermeter-cron.log"]

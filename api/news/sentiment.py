@@ -6,7 +6,7 @@ from nltk.tokenize        import word_tokenize
 from nltk.corpus          import stopwords
 from nltk.stem            import WordNetLemmatizer
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from crypto.models        import Opinion,Analisis, Source
+from .models import Opinion,Analisis, Source
 
 analyzer = SentimentIntensityAnalyzer()
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from crypto.models import Opinion, Analisis, Source
+from .models import Opinion, Analisis, Source, Sentiment
 
 
 class OpinionSerializer(serializers.ModelSerializer):
@@ -25,9 +25,6 @@ class OpinionSerializer(serializers.ModelSerializer):
         representation['NERs']         = instance.analisis.ners
 
         return representation
-
-
-
 
 class SourceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,4 +63,29 @@ class AnalisisSerializer(serializers.ModelSerializer):
             representation['article']      = Opinion.objects.filter(analisis=instance).last().link
         except:
             representation['article']      = "Link not found"
+        return representation
+    
+class SentimentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = Sentiment
+        fields = '__all__'
+    
+    def to_representation(self, instance):
+        representation          = super().to_representation(instance)
+
+        representation['crypto']= instance.crypto.name
+
+        representation['price'] = str(instance.price.price) + " USD"
+ 
+        if(instance.sentiment == 0):
+            representation['sentiment']= "NEUTRAL"
+        elif(instance.sentiment > 0):
+            representation['sentiment']= "POSITIVE"
+        else:
+            representation['sentiment']= "NEGATIVE"
+
+        representation['rta']          = round(instance.sentiment,2)
+
+        representation['sources']      = instance.source
+
         return representation

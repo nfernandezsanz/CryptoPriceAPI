@@ -64,7 +64,7 @@ The following tools were used in this project:
 
 ## :white_check_mark: Requirements ##
 
-Before starting :checkered_flag:, you need to have [Git](https://git-scm.com), [Docker](https://www.docker.com/), [Docker Compose](https://docs.docker.com/engine/reference/commandline/compose/) and [MySQL Server](https://phoenixnap.com/kb/install-mysql-ubuntu-20-04) installed.
+Before starting :checkered_flag:, you need to have [Git](https://git-scm.com), [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/engine/reference/commandline/compose/) installed.
 
 ## :checkered_flag: Starting ##
 
@@ -85,6 +85,16 @@ $ docker-compose build
 $ docker-compose up 
 
 # The API will initialize in the <http://localhost:8000>
+
+# Search for the container name
+$ docker ps
+# Navigate to the container
+$ docker exec -ti {cotainer name} bash
+# Load the Cryptos to the DB
+$ python manage.py loadCryptos
+# Create a superuser to access to the admin (http://localhost:8000/admin)
+$ python manage.py createsuperuser
+
 ```
 
 ## :memo: License ##

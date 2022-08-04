@@ -1,10 +1,8 @@
 
 import re
 import os
-import requests
 import pyshorteners
 from newsapi    import NewsApiClient
-from bs4        import BeautifulSoup
 from datetime   import datetime, timedelta
 from newspaper  import Article
 from newspaper  import Config

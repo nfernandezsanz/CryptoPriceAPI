@@ -10,8 +10,6 @@ router.register('crypto'     , viewsets.CryptoViewSet)
 
 router.register('price'     , viewsets.PriceRecordViewSet)
 
-router.register('sentiment' , viewsets.SentimentViewSet)
-
 urlpatterns = [
     path('', include(router.urls)),
 ]

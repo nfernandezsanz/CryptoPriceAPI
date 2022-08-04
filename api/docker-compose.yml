@@ -2,18 +2,18 @@
 version: '3'
 
 services:
-  db:
-    image: mysql
-    #restart: always
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./data/db:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: hernanborre
-      MYSQL_USER: dev
-      MYSQL_PASSWORD: hernanborre
-      MYSQL_DATABASE: dev
+  # db:
+  #   image: mysql
+  #   restart: always
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - ./data/db:/var/lib/mysql
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: argentina
+  #     MYSQL_USER: dev
+  #     MYSQL_PASSWORD: dev
+  #     MYSQL_DATABASE: dev
 
   api_web:
     build:
@@ -22,19 +22,18 @@ services:
     tty: true
     #restart: always
     command: python manage.py runserver 0.0.0.0:8000
+    # /bin/bash -c "python3 manage.py collectstatic --no-input && python3 manage.py makemigrations && python3 manage.py migrate && gunicorn cra.wsgi -b 0.0.0.0:8000 --workers=3 --reload --log-file=-"
+    # python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
     ports:
       - "8000:8000"
     env_file:
       - ./envs/db.env
-    depends_on:
-      - db
+    # depends_on:
+    #   - db
       
-  crons:
-    build:
-      context: .
-      dockerfile: ./Dockerfile.cron
-    env_file:
-      - ./envs/db.env
-    command:  sh -c ./cron/start_cron_shit.sh
+  # crons:
+  #   build:
+  #     context: .
+  #     dockerfile: ./Dockerfile.cron
