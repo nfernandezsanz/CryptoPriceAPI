@@ -12,13 +12,17 @@ class OpinionSerializer(serializers.ModelSerializer):
         representation['crypto'] = instance.crypto.name
 
         representation['source'] = instance.source.name
- 
-        if(instance.analisis.sentiment == 0):
-            representation['sentiment']= "NEUTRAL"
-        elif(instance.analisis.sentiment > 0):
-            representation['sentiment']= "POSITIVE"
+        
+        if(instance.analisis.sentiment):
+            if(instance.analisis.sentiment == 0):
+                representation['sentiment']= "NEUTRAL"
+            elif(instance.analisis.sentiment > 0):
+                representation['sentiment']= "POSITIVE"
+            else:
+                representation['sentiment']= "NEGATIVE"
         else:
-            representation['sentiment']= "NEGATIVE"
+            representation['sentiment']= "NEUTRAL"
+
         
         representation['analisis']     = round(instance.analisis.sentiment,2)
         representation['MFwords']      = instance.analisis.fre
@@ -34,12 +38,16 @@ class SourceSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation            = super().to_representation(instance)
 
-        if(instance.afinity == 0):
-            representation['afinity'] = "NEUTRAL"
-        elif(instance.afinity < 0):
-            representation['afinity'] = "ANTI-CRYPTO"
+        if(instance.afinity):
+            if(instance.afinity == 0):
+                representation['afinity'] = "NEUTRAL"
+            elif(instance.afinity < 0):
+                representation['afinity'] = "ANTI-CRYPTO"
+            else:
+                representation['afinity'] = "CRYPTO AMIGO"
         else:
-            representation['afinity'] = "CRYPTO AMIGO"
+            representation['afinity'] = "NEUTRAL"
+
 
         return representation
 

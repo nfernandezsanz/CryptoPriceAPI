@@ -7,7 +7,6 @@ from nltk.corpus          import stopwords
 from nltk.stem            import WordNetLemmatizer
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from .models import Opinion,Analisis, Source
-import fear_and_greed
 
 analyzer = SentimentIntensityAnalyzer()
 
