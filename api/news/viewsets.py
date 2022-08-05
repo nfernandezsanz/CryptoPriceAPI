@@ -8,7 +8,7 @@ from rest_framework             import viewsets, status, permissions
 from datetime                   import datetime, timedelta
 from django.utils               import timezone        
 from django.utils.timezone      import make_aware
-from news.google                import get_news
+from news.news                  import get_news
 from news.sentiment             import analize
 
 class NewsViewSet(viewsets.ModelViewSet):

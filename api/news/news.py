@@ -12,7 +12,7 @@ type_tiny = pyshorteners.Shortener()
 
 def get_news(crypto, max = 10):
 
-    newsapi = NewsApiClient(api_key="a32c4d1be7704492ae764375eb5436d6")
+    newsapi = NewsApiClient(api_key=os.getenv('NEWS_API', ''))
     d_from  = datetime.strftime(datetime.now() - timedelta(1), '%Y-%m-%d')
 
     headlines = newsapi.get_everything(
