@@ -8,9 +8,10 @@ from rest_framework             import viewsets, status, permissions
 from datetime                   import datetime, timedelta
 from django.utils               import timezone        
 from django.utils.timezone      import make_aware
-from news.google                import get_news
+from news.news                  import get_news
 from news.sentiment             import analize
-
+import fear_and_greed
+from .cryptofag import crypto_fag
 class NewsViewSet(viewsets.ModelViewSet):
     serializer_class   = OpinionSerializer
     queryset           = Opinion.objects.all()
@@ -35,7 +36,7 @@ class SentimentViewSet(viewsets.ModelViewSet):
         crypto    = request.query_params.get('crypto', None)
 
         if(not crypto):
-            return Response({"msg": "Ingrese una crypto", "error_code": "400"}, 
+            return Response({"msg": "Specify a crypto with the 'crypto' parameter. Example ?crypto=bitcoin", "error_code": "400"}, 
                              status=status.HTTP_400_BAD_REQUEST)  
         
         crypto = Crypto.objects.filter(name = crypto).last()
@@ -59,7 +60,7 @@ class SentimentViewSet(viewsets.ModelViewSet):
             date_to = timezone.now()
 
         if(date_to - date_from < timedelta(days=1)):
-            return Response({"msg": "Fechas incongruentes", "error_code": "400"}, 
+            return Response({"msg": "Invalid dates", "error_code": "400"}, 
                                 status=status.HTTP_400_BAD_REQUEST)  
 
 
@@ -76,16 +77,16 @@ class SentimentViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get',])
     def now(self,request,pk=None):
-        crypto    = request.query_params.get('crypto', None)
+        crypto_    = request.query_params.get('crypto', None)
 
-        if(not crypto):
+        if(not crypto_):
             return Response({"msg": "Ingrese una crypto", "error_code": "400"}, 
                              status=status.HTTP_400_BAD_REQUEST)  
         
-        crypto = Crypto.objects.filter(name = crypto).last()
+        crypto = Crypto.objects.filter(name = crypto_).last()
 
         if(not crypto):
-            return Response({"msg": "Crypto not suported", "error_code": "400"}, 
+            return Response({"msg": f"Crypto: '{crypto_}' not suported", "error_code": "400"}, 
                              status=status.HTTP_400_BAD_REQUEST)  
 
         try:
@@ -93,7 +94,6 @@ class SentimentViewSet(viewsets.ModelViewSet):
             last_sentiment = Sentiment.objects.filter(crypto=crypto).order_by('timestamp').last()
 
             if((timezone.now() - last_sentiment.timestamp) < timedelta(minutes=5)):
-                print("Le devuelvo la misma data..")
                 return Response(SentimentSerializer(last_sentiment).data)
         except:
             pass
@@ -103,7 +103,7 @@ class SentimentViewSet(viewsets.ModelViewSet):
         news = get_news(crypto)
 
         if(len(news) < 3):
-            return Response({"msg": "No se encontraron articulos suficientes de la crypto solicitada", "error_code": "422"}, 
+            return Response({"msg": "Not enough articles found", "error_code": "422"}, 
                              status=status.HTTP_422_UNPROCESSABLE_ENTITY)  
 
         # Me traigo el precio..
@@ -120,11 +120,19 @@ class SentimentViewSet(viewsets.ModelViewSet):
         pr.save() 
 
         sentiment.price = pr
-
         sentiment.save()
 
-        sum  = 0
-        cant = 0
+        # Stocks Fear and greed source 1
+        fag1 = float(dict(fear_and_greed.get()._asdict())['value'])
+        # Crypto Fear and greed source 2
+        fag2 = float(crypto_fag())
+        fag = (((fag1 + fag2) / 2.0) - 50 ) / 70 # I divide for the last maximun.. I use it as one extra source
+        
+        print(f"Fear and greed {fag}")
+
+        sum  = fag
+        cant = 1
+
         for new in news:
             print("\n---------------------------------------------")
             print("\t",new['url'])
@@ -135,6 +143,8 @@ class SentimentViewSet(viewsets.ModelViewSet):
                 cant += 1
         
         sum = sum / cant
+
+
 
         sentiment.sentiment = sum
         sentiment.save()

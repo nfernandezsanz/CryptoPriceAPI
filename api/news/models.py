@@ -14,12 +14,16 @@ class Source(models.Model):
     
     @property
     def afinity_str(self):
-        if(self.afinity > 0):
-            return "CRYPTO-FRIEND"
-        elif(self.afinity < 0):
-            return "CRYPTO-ENEMY"
-        else:
+        try:
+            if(self.afinity > 0):
+                return "CRYPTO-FRIEND"
+            elif(self.afinity < 0):
+                return "CRYPTO-ENEMY"
+            else:
+                return "NEUTRAL"
+        except:
             return "NEUTRAL"
+
 class Sentiment(models.Model):
     crypto     = models.ForeignKey(Crypto, on_delete=models.CASCADE, default=None)
     timestamp  = models.DateTimeField(auto_now_add=True)
