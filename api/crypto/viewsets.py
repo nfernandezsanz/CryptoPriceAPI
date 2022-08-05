@@ -6,23 +6,39 @@ from rest_framework.decorators  import action
 from rest_framework             import viewsets, status, permissions
 from .coingecko                 import get_cryptos
 
+
+prohibit = ['x', '/', 'BTC', 'ADA', 'DAO', '$' , '-', '+', 'up', 'down', ' ', '.', '#']
+def str__(int):
+    return str(int)
+prohibit.extend(list(map(str__,range(11))))
+
 def load_cryptos():
     print("Downloading cryptos...")
     list    = get_cryptos()
     print(f"Downloadead {len(list)} cryptos")
     cryptos = Crypto.objects.all().values_list('name', flat=True)
     print("Loading cryptos..")
+    count = 0
     for c in list:
         #Protejo que no se repitan los datos
-        if(c['name'] not in cryptos):
+        name = c['name'].lower()
+        symbol = c['symbol'].lower()
+
+        if(any(ext in name for ext in prohibit)):
+            continue
+
+        if(name not in cryptos):
             try:
                 n = Crypto()
-                n.name   = c['name']
-                n.symbol = c['symbol'] 
+                n.name   = name
+                prohibit.append(name)
+                n.symbol = symbol
                 n.save()
+                count += 1
             except:
                 pass
-    print("Cryptos loaded")
+
+    print(f"Cryptos loaded {count} cryptos!")
 class CryptoViewSet(viewsets.ModelViewSet):
     serializer_class   = CryptoSerializer
     queryset           = Crypto.objects.all()

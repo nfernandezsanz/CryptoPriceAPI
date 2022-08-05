@@ -35,7 +35,7 @@ class SentimentViewSet(viewsets.ModelViewSet):
         crypto    = request.query_params.get('crypto', None)
 
         if(not crypto):
-            return Response({"msg": "Ingrese una crypto", "error_code": "400"}, 
+            return Response({"msg": "Specify a crypto with the 'crypto' parameter. Example ?crypto=bitcoin", "error_code": "400"}, 
                              status=status.HTTP_400_BAD_REQUEST)  
         
         crypto = Crypto.objects.filter(name = crypto).last()
@@ -59,7 +59,7 @@ class SentimentViewSet(viewsets.ModelViewSet):
             date_to = timezone.now()
 
         if(date_to - date_from < timedelta(days=1)):
-            return Response({"msg": "Fechas incongruentes", "error_code": "400"}, 
+            return Response({"msg": "Invalid dates", "error_code": "400"}, 
                                 status=status.HTTP_400_BAD_REQUEST)  
 
 
@@ -76,16 +76,16 @@ class SentimentViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get',])
     def now(self,request,pk=None):
-        crypto    = request.query_params.get('crypto', None)
+        crypto_    = request.query_params.get('crypto', None)
 
-        if(not crypto):
+        if(not crypto_):
             return Response({"msg": "Ingrese una crypto", "error_code": "400"}, 
                              status=status.HTTP_400_BAD_REQUEST)  
         
-        crypto = Crypto.objects.filter(name = crypto).last()
+        crypto = Crypto.objects.filter(name = crypto_).last()
 
         if(not crypto):
-            return Response({"msg": "Crypto not suported", "error_code": "400"}, 
+            return Response({"msg": f"Crypto: '{crypto_}' not suported", "error_code": "400"}, 
                              status=status.HTTP_400_BAD_REQUEST)  
 
         try:
@@ -93,7 +93,6 @@ class SentimentViewSet(viewsets.ModelViewSet):
             last_sentiment = Sentiment.objects.filter(crypto=crypto).order_by('timestamp').last()
 
             if((timezone.now() - last_sentiment.timestamp) < timedelta(minutes=5)):
-                print("Le devuelvo la misma data..")
                 return Response(SentimentSerializer(last_sentiment).data)
         except:
             pass
@@ -103,7 +102,7 @@ class SentimentViewSet(viewsets.ModelViewSet):
         news = get_news(crypto)
 
         if(len(news) < 3):
-            return Response({"msg": "No se encontraron articulos suficientes de la crypto solicitada", "error_code": "422"}, 
+            return Response({"msg": "Not enough articles found", "error_code": "422"}, 
                              status=status.HTTP_422_UNPROCESSABLE_ENTITY)  
 
         # Me traigo el precio..

@@ -99,7 +99,7 @@ $ python manage.py createsuperuser
 
 ## :memo: License ##
 
-This is a personal project part of my portfolio. Feel free to use it for good purposes and remember that cryptocurrencies are volatile, do not invest blindly.
+This is a personal project part of my portfolio. Feel free to use it for good purposes and remember that cryptocurrencies are volatile, do not invest without a further research.
 
 
 &#xa0;
