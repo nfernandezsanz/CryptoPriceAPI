@@ -10,7 +10,8 @@ from django.utils               import timezone
 from django.utils.timezone      import make_aware
 from news.news                  import get_news
 from news.sentiment             import analize
-
+import fear_and_greed
+from .cryptofag import crypto_fag
 class NewsViewSet(viewsets.ModelViewSet):
     serializer_class   = OpinionSerializer
     queryset           = Opinion.objects.all()
@@ -119,11 +120,19 @@ class SentimentViewSet(viewsets.ModelViewSet):
         pr.save() 
 
         sentiment.price = pr
-
         sentiment.save()
 
-        sum  = 0
-        cant = 0
+        # Stocks Fear and greed source 1
+        fag1 = float(dict(fear_and_greed.get()._asdict())['value'])
+        # Crypto Fear and greed source 2
+        fag2 = float(crypto_fag())
+        fag = (((fag1 + fag2) / 2.0) - 50 ) / 70 # I divide for the last maximun.. I use it as one extra source
+        
+        print(f"Fear and greed {fag}")
+
+        sum  = fag
+        cant = 1
+
         for new in news:
             print("\n---------------------------------------------")
             print("\t",new['url'])
@@ -134,6 +143,8 @@ class SentimentViewSet(viewsets.ModelViewSet):
                 cant += 1
         
         sum = sum / cant
+
+
 
         sentiment.sentiment = sum
         sentiment.save()
